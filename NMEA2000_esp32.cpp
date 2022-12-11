@@ -231,6 +231,11 @@ void tNMEA2000_esp32::CAN_read_frame() {
   MODULE_CAN->CMR.B.RRB=1;
 }
 
+static int __sentCanFramesCnt = 0;
+int nmea2000_esp32_getTxFramesCnt(){
+    return __sentCanFramesCnt;
+}
+
 //*****************************************************************************
 void tNMEA2000_esp32::CAN_send_frame(tCANFrame &frame) {
   CAN_FIR_t FIR;
@@ -252,7 +257,9 @@ void tNMEA2000_esp32::CAN_send_frame(tCANFrame &frame) {
 
   // Transmit frame
   MODULE_CAN->CMR.B.TR=1;
+  __sentCanFramesCnt ++;
 }
+
 
 //*****************************************************************************
 void tNMEA2000_esp32::InterruptHandler() {
